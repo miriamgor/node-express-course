@@ -1,6 +1,6 @@
 const http = require("http");
 var StringDecoder = require("string_decoder").StringDecoder;
-
+// this is a comment!
 const getBody = (req, callback) => {
   const decode = new StringDecoder("utf-8");
   let body = "";
@@ -47,7 +47,7 @@ const server = http.createServer((req, res) => {
   console.log("req.url is ", req.url);
   if (req.method === "POST") {
     getBody(req, (body) => {
-      console.log("The body of the post is ", body['color']);
+      console.log("The body of the post is ", body["color"]);
       // here, you can add your own logic
       if (body["color"]) {
         selectedColor = body["color"];
@@ -66,5 +66,8 @@ const server = http.createServer((req, res) => {
   }
 });
 
+server.on("request", (req) => {  
+  console.log("event received: ", req.method, req.url);  
+});
 server.listen(5000);
 console.log("The server is listening on port 5000.");
