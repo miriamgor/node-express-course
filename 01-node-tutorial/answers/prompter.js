@@ -1,6 +1,6 @@
 const http = require("http");
 var StringDecoder = require("string_decoder").StringDecoder;
-
+// this is a comment!
 const getBody = (req, callback) => {
   const decode = new StringDecoder("utf-8");
   let body = "";
@@ -21,16 +21,21 @@ const getBody = (req, callback) => {
 };
 
 // here, you could declare one or more variables to store what comes back from the form.
-let item = "Enter something below.";
+let selectedColor = "white";
 
 // here, you can change the form below to modify the input fields and what is displayed.
 // This is just ordinary html with string interpolation.
 const form = () => {
   return `
-  <body>
-  <p>${item}</p>
+  <body style="background-color: ${selectedColor};">
+  <p>Your selected color is: ${selectedColor}</p>
   <form method="POST">
-  <input name="item"></input>
+  <select name="color">
+    <option value="white">White</>
+    <option value="red">Red</>
+    <option value="green">Green</>
+    <option value="blue">Blue</>
+  </select>
   <button type="submit">Submit</button>
   </form>
   </body>
@@ -42,13 +47,14 @@ const server = http.createServer((req, res) => {
   console.log("req.url is ", req.url);
   if (req.method === "POST") {
     getBody(req, (body) => {
-      console.log("The body of the post is ", body);
+      console.log("The body of the post is ", body["color"]);
       // here, you can add your own logic
-      if (body["item"]) {
-        item = body["item"];
+      if (body["color"]) {
+        selectedColor = body["color"];
       } else {
-        item = "Nothing was entered.";
+        selectedColor = "white";
       }
+      console.log("selected color stored is:", selectedColor);
       // Your code changes would end here
       res.writeHead(303, {
         Location: "/",
@@ -60,5 +66,8 @@ const server = http.createServer((req, res) => {
   }
 });
 
-server.listen(3000);
-console.log("The server is listening on port 3000.");
+server.on("request", (req) => {  
+  console.log("event received: ", req.method, req.url);  
+});
+server.listen(5000);
+console.log("The server is listening on port 5000.");
