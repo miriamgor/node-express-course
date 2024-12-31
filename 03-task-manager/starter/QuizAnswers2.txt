@@ -1,0 +1,16 @@
+1. We created middleware function asyncWrapper 
+in order to reduce the number of try, catch blocks 
+we were using because there were too many and it was
+not too effective. 
+Using the asyncWrapper function we are able to create 
+a general error handling. 
+
+2. 
+const getTask = asyncWrapper(async (req, res, next) => {  
+  const { id: taskID } = req.params;  
+  const task = await Task.findOne({ _id: taskID });  
+  if (!task) {  
+    return next(createCustomError(`No task with id: ${taskID}`, 404)) 
+  }  
+  res.status(200).json({ task });  
+}); 
